@@ -1,0 +1,76 @@
+Given a binary search tree (BST) with duplicates, find all the mode(s) (the most frequently occurred element) in the given BST.
+Assume a BST is defined as follows:
+    The left subtree of a node contains only nodes with keys less than or equal to the node's key.
+    The right subtree of a node contains only nodes with keys greater than or equal to the node's key.
+    Both the left and right subtrees must also be binary search trees.
+Note: If a tree has more than one mode, you can return them in any order.
+Follow up: Could you do that without using any extra space? (Assume that the implicit stack space incurred due to recursion does not count).
+
+[1,null,2,2] --> [2]
+[1,2,2,3,3] --> [2,3]
+
+-------------------------------------------------------------------------------------------------------------
+
+
+
+-------------------------------------------------------------------------------------------------------------
+
+// USING ADDITIONAL STORAGE
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> findMode(TreeNode* root) {
+        if (root == nullptr) return std::vector<int>();
+        
+        // Local variable declaration
+        std::vector<int> result_modes;
+        std::stack<TreeNode *> stk_nodes;
+        std::map<int, std::size_t> my_map;
+        std::size_t max_count = 0;
+        
+        stk_nodes.push(root);
+        
+        // Using DFS - Preorder Traversal of BST
+        while(!stk_nodes.empty()) {
+            TreeNode *t_node = stk_nodes.top();
+            if (my_map.find(t_node->val) != my_map.end()) {
+                my_map[t_node->val] += 1;
+                //std::cout << "A:: KEY = " << t_node->val << " VAL = " << my_map[t_node->val] << std::endl;
+            } else {
+                my_map[t_node->val] = 1;
+                //std::cout << "B:: KEY = " << t_node->val << " VAL = " << my_map[t_node->val] << std::endl;
+            }
+            if (my_map[t_node->val] > max_count) {
+                max_count = my_map[t_node->val];
+            }
+            stk_nodes.pop();
+            if (t_node->left != nullptr) {
+                stk_nodes.push(t_node->left);
+            }
+            if (t_node->right != nullptr) {
+                stk_nodes.push(t_node->right);
+            }
+        }
+        
+        //std::cout << "MAX COUNT = " << max_count << std::endl;
+        for (auto iter = my_map.begin(); iter != my_map.end(); ++iter) {
+            //std::cout << iter->first << " " << iter->second << std::endl;
+            if (iter->second == max_count) {
+                result_modes.push_back(iter->first);
+            }
+        }
+        
+        return result_modes;
+    }
+};
+
+-------------------------------------------------------------------------------------------------------------

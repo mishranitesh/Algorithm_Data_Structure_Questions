@@ -1,0 +1,74 @@
+Given a binary tree, return the tilt of the whole tree. The tilt of a tree node is defined as the absolute difference between the sum of all left subtree node values and the sum of all right subtree node values. Null node has tilt 0. The tilt of the whole tree is defined as the sum of all nodes' tilt.
+Note:
+    The sum of node values in any subtree won't exceed the range of 32-bit integer.
+    All the tilt values won't exceed the range of 32-bit integer.
+
+Input: 
+         1
+       /   \
+      2     3
+Output: 1
+Explanation: Tilt of node 2 : 0 --> Tilt of node 3 : 0 --> Tilt of node 1 : |2-3| = 1 --> Tilt of binary tree : 0 + 0 + 1 = 1
+
+[1,2,3,4,5,6,7] --> 7
+[1,3,2,5,3,null,9] --> 11
+[1,3,2,5,3,10,9] --> 13
+[0,-9999,-1] --> 9998
+
+-------------------------------------------------------------------------------------------------------------
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    
+    void postOrderTraversal(TreeNode *node, int *tilt_ptr) {
+        
+        // Base case
+        if (node != nullptr) {
+            
+            // Recursion case
+            postOrderTraversal(node->left, tilt_ptr);
+            postOrderTraversal(node->right, tilt_ptr);
+            
+            // Process the node
+            if (node->left == nullptr && node->right == nullptr) {
+                *tilt_ptr += 0;
+            }
+            if (node->left == nullptr && node->right != nullptr) {
+                *tilt_ptr += std::abs(0 - node->right->val);
+                node->val += node->right->val;
+            }
+            if (node->left != nullptr && node->right == nullptr) {
+                *tilt_ptr += std::abs(node->left->val - 0);
+                node->val += node->left->val;
+            }
+            if (node->left != nullptr && node->right != nullptr) {
+                *tilt_ptr += std::abs(node->left->val - node->right->val);
+                node->val += node->left->val + node->right->val;
+            }
+        }
+    }
+    
+    int findTilt(TreeNode* root) {
+        
+        if (root == nullptr) return 0;
+        
+        // Local variable declaration
+        int tilt_value = 0;
+        
+        // Recursive call for post order traversal on BST
+        postOrderTraversal(root, &tilt_value);
+        
+        return tilt_value;
+    }
+};
+
+-------------------------------------------------------------------------------------------------------------

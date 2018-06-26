@@ -1,0 +1,140 @@
+You need to find the largest value in each row of a binary tree.
+
+[1,3,2,5,3,null,9] --> [1,3,9]
+[1,3,2,5,3,10,9] --> [1,3,10]
+[0,-9999,-1] --> [0,-1]
+
+-------------------------------------------------------------------------------------------------------------
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> largestValues(TreeNode* root) {
+        if (root == nullptr) return std::vector<int>();
+        
+        // Local variable declaration
+        std::vector<int> result_values;
+        std::queue<std::pair<TreeNode *, int>> bfs_queue;
+        int cur_level = 1, max_level = INT_MIN;
+        
+        bfs_queue.push(std::pair<TreeNode *, int>(root, 1));
+        
+        while (!bfs_queue.empty()) {
+            auto t_pair = bfs_queue.front();
+            bfs_queue.pop();
+            
+            if (cur_level == t_pair.second) {
+                if (max_level < t_pair.first->val) {
+                    max_level = t_pair.first->val;
+                }
+            } else {
+                result_values.push_back(max_level);
+                max_level = INT_MIN;
+                cur_level = t_pair.second;
+                if (max_level < t_pair.first->val) {
+                    max_level = t_pair.first->val;
+                }
+            }
+            if (t_pair.first->left != nullptr) {
+                bfs_queue.push(std::pair<TreeNode *, int>(t_pair.first->left, t_pair.second + 1));
+            }
+            if (t_pair.first->right != nullptr) {
+                bfs_queue.push(std::pair<TreeNode *, int>(t_pair.first->right, t_pair.second + 1));
+            }
+        }
+        result_values.push_back(max_level);
+        
+        return result_values;
+    }
+};
+
+-------------------------------------------------------------------------------------------------------------
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    
+    std::queue<std::pair<TreeNode *, int>> helper(TreeNode *root) {
+        // Local variable declaration
+        std::queue<std::pair<TreeNode *, int>> result_queue;
+        std::queue<std::pair<TreeNode *, int>> bfs_queue; // Queue to help while performing BFS
+        //std::queue<std::pair<TreeNode *, int>> t_queue;
+        
+        result_queue.push(std::pair<TreeNode *, int>(root, 1));
+        bfs_queue.push(std::pair<TreeNode *, int>(root, 1));
+        //t_queue.push(std::pair<TreeNode *, int>(root, 1));
+        
+        while (!bfs_queue.empty()) {
+            auto t_pair = bfs_queue.front();
+            bfs_queue.pop();
+            if (t_pair.first->left != nullptr) {
+                result_queue.push(std::pair<TreeNode *, int>(t_pair.first->left, t_pair.second + 1));
+                bfs_queue.push(std::pair<TreeNode *, int>(t_pair.first->left, t_pair.second + 1));
+                //t_queue.push(std::pair<TreeNode *, int>(t_pair.first->left, t_pair.second + 1));
+            }
+            if (t_pair.first->right != nullptr) {
+                result_queue.push(std::pair<TreeNode *, int>(t_pair.first->right, t_pair.second + 1));
+                bfs_queue.push(std::pair<TreeNode *, int>(t_pair.first->right, t_pair.second + 1));
+                //t_queue.push(std::pair<TreeNode *, int>(t_pair.first->right, t_pair.second + 1));
+            }
+        }
+        
+        /*while (!t_queue.empty()) {
+            std::cout << (t_queue.front()).first->val << ", Level = " << (t_queue.front()).second << std::endl;
+            t_queue.pop();
+        }*/
+        
+        return result_queue;
+    }
+    
+    vector<int> largestValues(TreeNode* root) {
+        if (root == nullptr) return std::vector<int>();
+        
+        // Local variable declaration
+        std::vector<int> result_values;
+        std::queue<std::pair<TreeNode *, int>> level_queue = helper(root);
+        int cur_level = 1, max_level = INT_MIN;
+        
+        // Traverse through queue to get max at each level
+        while (!level_queue.empty()) {
+            auto t_pair = level_queue.front();
+            level_queue.pop();
+            if (cur_level == t_pair.second) {
+                //std::cout << "A:: p->sec = " << t_pair.second << std::endl;
+                if (max_level < t_pair.first->val) {
+                    max_level = t_pair.first->val;
+                }
+            } else {
+                //std::cout << "B:: p->sec = " << t_pair.second << std::endl;
+                result_values.push_back(max_level);
+                max_level = t_pair.first->val;
+                cur_level = t_pair.second;
+                if (max_level < t_pair.first->val) {
+                    max_level = t_pair.first->val;
+                }
+            }
+        }
+        result_values.push_back(max_level);
+        
+        return result_values;
+    }
+};
+
+
+-------------------------------------------------------------------------------------------------------------

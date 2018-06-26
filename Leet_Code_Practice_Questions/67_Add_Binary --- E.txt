@@ -1,0 +1,63 @@
+Given two binary strings, return their sum (also a binary string).
+The input strings are both non-empty and contains only characters 1 or 0.
+Input: a = "11", b = "1"
+Output: "100"
+Input: a = "1010", b = "1011"
+Output: "10101"
+
+-------------------------------------------------------------------------------------------------------------
+
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        
+        std::string result_str;
+        std::size_t a_len = a.length(), b_len = b.length(), carry = 0;
+        
+        if (a_len < b_len) {
+            while (a_len != b_len) {
+                a.insert(0, 1, '0');
+                ++a_len;
+            }
+        } else if (b_len < a_len) {
+            while (a_len != b_len) {
+                b.insert(0, 1, '0');
+                ++b_len;
+            }
+        }
+        
+        //std::cout << "a = " << a << " - " << a_len << "\t\t b = " << b << " - " << b_len << std::endl;
+        
+        for (int i = a_len - 1; i >= 0; --i) {
+            if (a[i] == '1' && b[i] == '1') {
+                if (carry == 0) {
+                    result_str.insert(0, 1, '0');
+                } else {
+                    result_str.insert(0, 1, '1');
+                }
+                carry = 1;
+            } else if ((a[i] == '1' && b[i] == '0') || (a[i] == '0' && b[i] == '1')) {
+                if (carry == 0) {
+                    result_str.insert(0, 1, '1');
+                } else {
+                    result_str.insert(0, 1, '0');
+                    carry = 1;
+                }
+            } else {
+                if (carry == 0) {
+                    result_str.insert(0, 1, '0');
+                } else {
+                    result_str.insert(0, 1, '1');
+                    carry = 0;
+                }
+            }
+        }
+        
+        if (carry == 1) {
+            result_str.insert(0, 1, '1');
+            carry = 0;
+        }
+        
+        return result_str;
+    }
+};

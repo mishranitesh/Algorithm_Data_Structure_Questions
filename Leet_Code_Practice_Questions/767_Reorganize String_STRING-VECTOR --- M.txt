@@ -1,0 +1,71 @@
+Given a string S, check if the letters can be rearranged so that two characters that are adjacent to each other are not the same.
+If possible, output any possible result.  If not possible, return the empty string.
+
+S = "aab" --> "aba"
+S = "aaab" --> ""
+S = "baaba" --> "ababa"
+S = "cxmwmmm" --> "mcmwmxm"
+S = "vvvlo" --> "vlvov"
+S = "abbabbaaab" --> "ababababab"
+
+-------------------------------------------------------------------------------------------------------------
+
+class Solution {
+public:
+    string reorganizeString(string S) {
+        
+        // Base condition
+        assert(S.length());
+        
+        // Local variable declaration
+        std::string result_str = "";
+        std::vector<char> char_list;
+        
+        // Logic to insert maximum possible char combination in result string
+        for (auto ch : S) {
+            if (result_str.front() != ch) {
+                result_str.insert(result_str.begin(), ch);
+            } else if (result_str.back() != ch) {
+                result_str.push_back(ch);
+            } else {
+                char_list.push_back(ch);
+            }
+        }
+        
+        /*std::cout << "A:: " << result_str << std::endl;
+        for (auto ch : char_list) {
+            std::cout << ch << " ";
+        }
+        std::cout << std::endl;*/
+        
+        // Traverse through whole vector<char> to check possibility of inserting char in result string
+        for (auto ch_it = char_list.begin(); ch_it != char_list.end(); ++ch_it) {
+            for (auto iter = result_str.begin(); iter != result_str.end(); ++iter) {
+                //std::cout << "LOOP:: *ch_it = " << *ch_it << ", *iter = " << *iter << ", STR = " << result_str << std::endl;
+                if (*iter != *ch_it) {
+                    if (*(iter + 1) != *ch_it) {
+                        result_str.insert(iter + 1, *ch_it);
+                        char_list.erase(ch_it);
+                        ch_it = char_list.begin() - 1;
+                        break;
+                    } else if (*(iter - 1) != *ch_it) {
+                        result_str.insert(iter, *ch_it);
+                        char_list.erase(ch_it);
+                        ch_it = char_list.begin() - 1;
+                        break;
+                    }
+                } 
+            }
+        }
+        
+        //std::cout << "B:: " << result_str << std::endl;
+        
+        if (!char_list.empty()) {
+            return std::string();
+        }
+        
+        return result_str;
+    }
+};
+
+-------------------------------------------------------------------------------------------------------------

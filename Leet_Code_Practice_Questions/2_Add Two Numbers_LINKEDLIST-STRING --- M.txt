@@ -1,0 +1,107 @@
+You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 0 -> 8
+Explanation: 342 + 465 = 807.
+
+[9] [9] --> [8, 1]
+
+[9] [1,9,9,9,9,9,9,9,9,9] --> [0,0,0,0,0,0,0,0,0,0,1]
+
+-------------------------------------------------------------------------------------------------------------
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        
+        ListNode *result_list = nullptr;
+        std::string num_str_1 = "", num_str_2 = "", sum_str = "";
+        std::size_t carry = 0;
+        
+        // Convert first linked list into String
+        ListNode *temp_node = l1;
+        while (temp_node != nullptr) {
+            num_str_1 += std::to_string(temp_node->val);
+            temp_node = temp_node->next;
+        }
+        
+        // Convert second linked list into String
+        temp_node = l2;
+        while (temp_node != nullptr) {
+            num_str_2 += std::to_string(temp_node->val);
+            temp_node = temp_node->next;
+        }
+        
+        // Modify strings to have same length by appending 0's
+        if (num_str_1.length() > num_str_2.length()) {
+            while (num_str_1.length() != num_str_2.length()) {
+                num_str_2 += "0";
+            }
+        } else {
+            while (num_str_1.length() != num_str_2.length()) {
+                num_str_1 += "0";
+            }
+        }
+        
+        // Adding charater by character
+        for (std::size_t i = 0; i < num_str_1.length(); ++i) {
+            int digit_sum;
+            if (!carry) {
+                // Converting CHAR to INT and then adding two integers
+                digit_sum = (num_str_1[i] - '0') + (num_str_2[i] - '0');
+            } else {
+                digit_sum = (num_str_1[i] - '0') + (num_str_2[i] - '0') + carry;
+            }
+            
+            if (digit_sum > 9) {
+                int rem = digit_sum % 10;
+                std::stringstream s_str;
+                s_str << rem;
+                sum_str += s_str.str();
+                carry = 1;
+            } else {
+                // Converting INT to STRING
+                std::stringstream s_str;
+                s_str << digit_sum;
+                sum_str += s_str.str();
+                carry = 0;
+            }
+            //std::cout << digit_sum << " " << carry << " SUM --> " << sum_str << std::endl;
+        }
+        
+        // Checking for last carry if any
+        if (carry) {
+            sum_str += '1';
+            carry = 0;
+        }
+        
+        //std::cout << num_str_1 << "\n" << num_str_2 << "\n" << sum_str << std::endl;
+        
+        // Create new result linked list from sum string
+        for (auto iter = sum_str.begin(); iter != sum_str.end(); ++iter) {
+            ListNode *new_node = new ListNode(*iter - '0');
+            //std::cout << *iter << " " << *iter - '0' << " " << new_node->val << std::endl;
+            if (result_list == nullptr) {
+                result_list = new_node;
+            } else {
+                ListNode *temp_node = result_list;
+                while(temp_node->next != nullptr) {
+                    temp_node = temp_node->next;
+                }
+                temp_node->next = new_node;
+            }
+        }
+        
+        return result_list;
+    }
+};
+
+-------------------------------------------------------------------------------------------------------------

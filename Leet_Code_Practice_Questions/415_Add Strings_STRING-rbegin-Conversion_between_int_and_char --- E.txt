@@ -1,0 +1,71 @@
+Given two non-negative integers num1 and num2 represented as string, return the sum of num1 and num2.
+Note:
+	The length of both num1 and num2 is < 5100.
+	Both num1 and num2 contains only digits 0-9.
+	Both num1 and num2 does not contain any leading zero.
+	You must not use any built-in BigInteger library or convert the inputs to integer directly.
+
+"9" "9" --> "18"
+"999" "9" --> "1008"
+"999" "999" --> "1998"
+
+-------------------------------------------------------------------------------------------------------------
+
+class Solution {
+public:
+    string addStrings(string num1, string num2) {
+        
+        // Base conditions
+        if (num1.length() == 0 && num2.length() == 0) {
+            return std::string();
+        } else if (num1.length() == 0 && num2.length() != 0) {
+            return num2;
+        } else if (num1.length() != 0 && num2.length() == 0) {
+            return num1;
+        }
+        
+        // Local variable declaration
+        string num_sum = "";
+        int carry = 0;
+        
+        // Make both strings of same length by appending 0's at the beginning of the string
+        if (num1.length() < num2.length()) {
+            int len_diff = num2.length() - num1.length();
+            for (int i = 0; i < len_diff; ++i) {
+                num1.insert(num1.begin(), '0');
+            }
+        } else {
+            int len_diff = num1.length() - num2.length();
+            for (int i = 0; i < len_diff; ++i) {
+                num2.insert(num2.begin(), '0');
+            }
+        }
+        //std::cout << num1 << " " << num2 << std::endl;
+        
+        // Logic to compute sum
+        for (auto it1 = num1.rbegin(), it2 = num2.rbegin(); it1 != num1.rend() && it2 != num2.rend(); ++it1, ++it2) {
+            int n1 = *it1 - '0', n2 = *it2 - '0', sum = n1 + n2;
+            
+            if (carry > 0) {
+                sum += carry;
+                carry = 0;
+            }
+            
+            if (sum <= 9) {
+                num_sum.insert(num_sum.begin(), (sum + '0'));
+            } else {
+                num_sum.insert(num_sum.begin(), (sum % 10 + '0'));
+                carry = sum / 10;
+            }
+        }
+        
+        if (carry > 0) {
+            num_sum.insert(num_sum.begin(), '1');
+            carry = 0;
+        }
+        
+        return num_sum;
+    }
+};
+
+-------------------------------------------------------------------------------------------------------------
