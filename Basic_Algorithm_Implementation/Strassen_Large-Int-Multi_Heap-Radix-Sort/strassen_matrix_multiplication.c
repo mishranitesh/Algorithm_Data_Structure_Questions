@@ -10,7 +10,7 @@
 */
 int main() {
 
-    printf(MAG"\n------------------------- PROGRAMMING ASSIGNMENT - 2 - PART : 1 (Strassen's Matrix Multiplication) __ NITESH MISHRA ------------------------- \n\n"RST);
+    printf(MAG"\n------------------------- Strassen's Matrix Multiplication __ NITESH MISHRA ------------------------- \n\n"RST);
 
     // Variable Declaration and Initialization
     char is_retry = 'n';

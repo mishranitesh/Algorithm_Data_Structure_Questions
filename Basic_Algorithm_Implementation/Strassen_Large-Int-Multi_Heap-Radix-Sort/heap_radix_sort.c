@@ -9,7 +9,7 @@
 */
 int main() {
 
-    printf(MAG"\n-------------------------------------- PROGRAMMING ASSIGNMENT - 2 - PART : 3 - (Heap and Radix Sort) __ NITESH MISHRA -------------------------------------- \n\n"RST);
+    printf(MAG"\n-------------------------------------- Heap and Radix Sort __ NITESH MISHRA -------------------------------------- \n\n"RST);
 
     // Variable Declaration and Initialization
     int array_size = 0;
