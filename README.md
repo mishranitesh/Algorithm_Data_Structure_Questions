@@ -1,13 +1,21 @@
-## Implementation of basic algorithms using C language:
+#### Implementation of basic algorithms using C language:
 
-* PART 1:
+----------------------------------------------------------------
+
+* Algorithm Problem 1:
+    * 0/1 Knapsack
+
+* Algorithm Problem 2:
 	* Exchange Sort
 	* Insertion Sort
 	* Merge Sort
 	* Randomized Quick Sort
 
-* PART 2:
+* Algorithm Problem 3:
 	* Strassen's Matrix Multiplication
 	* Large Integer Multiplication
 	* Heap Sort
 	* Radix Sort
+
+----------------------------------------------------------------
+
